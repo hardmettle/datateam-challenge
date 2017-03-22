@@ -9,13 +9,31 @@ import kantan.csv.ops._
   * Created by harsh on 18/03/17.
   */
 
+/**
+  * [[CSVReader]] Generic class to read CSVs.Uses 3rd party application kantan.csv
+  * @param filePath Location of csv
+  * @param rowDecoder implicit deserializer for csv
+  * @tparam T Generic type to be read.
+  */
 case class CSVReader[T](filePath:String)(implicit rowDecoder: RowDecoder[T]) {
-
+  /**
+    * Method to get csv file url which is to be read.
+    * @return file url to be read.
+    */
   private def getFileURL:URL = getClass.getResource(s"/${this.filePath}")
-  println(getClass.getResource(s"/${this.filePath}"))
+
+  /**
+    * Uses kantan csv api to read csv file generically.
+    * @return reader of the file containing rows as results
+    */
   def readCSVFile():CsvReader[ReadResult[T]] = {
     getFileURL.asCsvReader[T](rfc.withHeader)
   }
+
+  /**
+    * Method to check validity of the file.The 3rd party api returns a wrapper Failure
+    * @return Either list of each errors for respective rows or list of well read records
+    */
   def validateData():Either[List[String],List[T]] = {
     var listOfRecords = List.empty[T]
     var listOfErrors = List.empty[String]
@@ -30,16 +48,3 @@ case class CSVReader[T](filePath:String)(implicit rowDecoder: RowDecoder[T]) {
     else Right(listOfRecords)
   }
 }
-/*case class B(i:Int,i2:Int)
-
-case class A(s:String,b:B){
-     implicit val aDecoder: RowDecoder[A] =
-       RowDecoder.ordered((s: String, i: Int, i2: Int) => A(s, B(i, i2)))
-     def printIt =
-         """S1,1,2
-      ,E,4""".asCsvReader[A](rfc).foreach(r => r match {
-           case Success(s) => println(s)
-           case Failure(v) => println(v.getMessage)
-         })
-   }*/
-
