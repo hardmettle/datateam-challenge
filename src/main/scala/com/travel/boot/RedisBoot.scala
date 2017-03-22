@@ -2,7 +2,7 @@ package com.travel.boot
 
 import akka.actor.ActorRefFactory
 import akka.util.Timeout
-import com.redis.{RedisClient, RedisClientPool}
+import com.redis.{RedisClient, RedisClientPool, RedisConnectionException}
 import com.typesafe.config.Config
 
 import scala.concurrent.ExecutionContext
@@ -26,10 +26,16 @@ trait RedisBoot {
     * @return RedisClient instance
     */
   def getRedisClient(implicit config:Config,executionContext:ExecutionContext): RedisClient = {
-    implicit val timeout = Timeout(config.getInt("travel-app.redis.timeout") seconds)
-    val host:String = config.getString("travel-app.redis.host")
-    val port:Int = config.getInt("travel-app.redis.port")
-    //new RedisClientPool("localhost", 6379)
-    new RedisClient(host, port)
+    try{
+      implicit val timeout = Timeout(config.getInt("travel-app.redis.timeout") seconds)
+      val host:String = config.getString("travel-app.redis.host")
+      val port:Int = config.getInt("travel-app.redis.port")
+      //new RedisClientPool("localhost", 6379)
+      new RedisClient(host, port)
+    }catch {
+      case ex:Exception =>
+        println(s"Exception occured while instantiating Redis.")
+        throw new RedisConnectionException("Exception occured while instantiating Redis")
+    }
   }
 }
