@@ -27,7 +27,8 @@ class MainBootSpec extends FunSuite{
     val  Success(result: Option[Int])  = future.mapTo[Option[Int]].value.get
     assert(result.isDefined && result.get == 2)
     val future2 = actorRef ? GeoDistanceCalculation(List(User(Some("U2"),Coordinates(1.1f,1.0f)) ,User(Some("U1"),Coordinates(8.9f,8.7f)) ))
-    //val  Success(result2: Int)  = future.mapTo[Int].value.get
+
+    val  Success(result2: Int)  = future2.mapTo[Int].value.get
     val output = conf.getString("travel-app.out-loc")
     val outputName = conf.getString("travel-app.out-file")
     //TODO: To avoid confusion clear off the file created since it's being appended in the engine.
@@ -37,6 +38,7 @@ class MainBootSpec extends FunSuite{
     val second = content.get(1).split(",")
     println(s"Nearest airport for ${first(0)} is ${first(1)}")
     println(s"Nearest airport for ${second(0)} is ${second(1)}")
-    assert(resultFile.exists() && first(1) == "A1" && second(1) == "A2")
+    //Check number of records added,file created and verify nearest airport for user
+    assert(result2 == 2 && resultFile.exists() && first(1) == "A1" && second(1) == "A2")
   }
 }
