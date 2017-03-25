@@ -28,11 +28,11 @@ case class CSVReader[T](filePath:String)(implicit rowDecoder: RowDecoder[T]) {
       * Uses kantan csv api to read csv file generically.
       * @return reader of the file containing rows as results
       */
-    def readCSVFile():CsvReader[ReadResult[T]] = try{
+    def readCSVFile():CsvReader[ReadResult[T]] = try {
       getFileURL.asCsvReader[T](rfc.withHeader)
     }catch {
       case ex:Exception => println(s"Error reading file $filePath")
-        throw new IOException(s"Error reading file $filePath")
+        "".asCsvReader[T](rfc)
     }
 
     /**

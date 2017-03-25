@@ -49,7 +49,7 @@ object DataProcessingEngineActor {
             actorSystem: ActorRefFactory): ActorRef =
     actorSystem.actorOf(Props(new DataProcessingEngineActor(redisClient,conf,executionContext)), "processing-actor")
 
-  //Takes a list of airports and indexes it into redis with geo commands
+  //Takes a list of airports and indexes it into redis with geo commands.Returns option of number of records indexed
   def indexInRedis(airports: List[Airport])(implicit redisClient:RedisClient,
                                             executionContext: ExecutionContext):Option[Int] =
     //redisClient.withClient[Option[Int]](client => {
@@ -57,7 +57,7 @@ object DataProcessingEngineActor {
     //})
 
 
-  //Helper method to calculate nearest airport for each user input
+  //Helper method to calculate nearest airport for each user input.Returns the count of input processed successfully
   def calculateNearestAirport(users:List[User])(implicit parallel:Int,config: Config,redisClient: RedisClient):Int = {
     //FIXME: HUGE HUGE HUGE !! drawback here due to API restrictions.
     //FIXME: Idea was to use parallel collection in scala to do batch processing in parallel asynchronously
@@ -86,6 +86,7 @@ object DataProcessingEngineActor {
             case Some(d) =>
               //If all is ok write output to file.
               fw.write(List(us.id.get,d.member.get).mkString(",")+"\n")
+              fw.flush()
               count = count + 1
             case None => println(s"No nearest airport found for $us")
           }

@@ -11,3 +11,5 @@ libraryDependencies += "net.debasishg" %% "redisclient" % "3.3"
 libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value
 libraryDependencies += "org.scalactic" %% "scalactic" % "3.0.1"
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.1" % "test"
+// https://mvnrepository.com/artifact/com.typesafe.akka/akka-testkit_2.11
+libraryDependencies += "com.typesafe.akka" % "akka-testkit_2.11" % "2.3.9"

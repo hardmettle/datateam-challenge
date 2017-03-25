@@ -35,7 +35,7 @@ trait RedisBoot {
     }catch {
       case ex:Exception =>
         println(s"Exception occured while instantiating Redis.")
-        throw new RedisConnectionException("Exception occured while instantiating Redis")
+        throw  RedisConnectionException("Exception occured while instantiating Redis")
     }
   }
 }
