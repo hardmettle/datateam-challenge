@@ -1,4 +1,5 @@
 .idea*
+*.csv
 project/project/
 project/target/
 target/

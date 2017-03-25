@@ -26,7 +26,7 @@ class MainBootSpec extends FunSuite{
     val future = actorRef ? IndexInRedis(List(Airport(Some("A1"),Coordinates(1.2f,2.1f)),Airport(Some("A2"),Coordinates(9.2f,8.1f))))
     val  Success(result: Option[Int])  = future.mapTo[Option[Int]].value.get
     assert(result.isDefined && result.get == 2)
-    val future2 = actorRef ? GeoDistanceCalculation(List(User(Some("U2"),Coordinates(1.1f,1.0f)) ,User(Some("U2"),Coordinates(8.9f,8.7f)) ))
+    val future2 = actorRef ? GeoDistanceCalculation(List(User(Some("U2"),Coordinates(1.1f,1.0f)) ,User(Some("U1"),Coordinates(8.9f,8.7f)) ))
     //val  Success(result2: Int)  = future.mapTo[Int].value.get
     val output = conf.getString("travel-app.out-loc")
     val outputName = conf.getString("travel-app.out-file")
